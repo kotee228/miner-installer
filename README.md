@@ -7,6 +7,10 @@ json
 ```bash
 "default_miners": ["rigel"]
 
+
+
+
+lll
 3. Установить 2 майнера (rigel + lolminer):
 json
 ```bash
