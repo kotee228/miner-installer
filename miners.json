@@ -16,5 +16,5 @@
       "install_path": "/hive/miners/t-rex/0.28.1"
     }
   },
-  "default_miners": ["rigel"]
+  "default_miners": ["rigel", "lolminer"]
 }
