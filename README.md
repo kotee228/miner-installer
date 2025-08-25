@@ -5,13 +5,8 @@
 1. Установить только 1 майнер (только rigel):
 json
 ```bash
-"default_miners": ["rigel"]
+6666
 
 
 
-
-lll
-3. Установить 2 майнера (rigel + lolminer):
-json
-```bash
-"default_miners": ["rigel", "lolminer"]
+hhh
