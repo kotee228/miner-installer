@@ -23,7 +23,7 @@ if [ -z "$DEFAULT_MINERS" ]; then
     exit 1
 fi
 
-echo "🔧 Устанавливаем майнеры: $DEFAULT_MINERS"
+echo "🔧 Устанавливаем майнеры..."
 
 # Установка майнеров
 for miner in $DEFAULT_MINERS; do
@@ -37,15 +37,9 @@ for miner in $DEFAULT_MINERS; do
     path=$(echo "$miner_block" | grep '"install_path"' | head -1 | cut -d'"' -f4)
     
     if [ -n "$version" ] && [ -n "$url" ] && [ -n "$path" ] && [ "$version" != "null" ]; then
-        echo "📦 Установка: $miner версии $version"
-        echo "📥 URL: $url"
-        echo "📁 Путь: $path"
         /tmp/install_miner.sh "$miner" "$version" "$url" "$path"
     else
         echo "⚠️ Ошибка конфига для $miner"
-        echo "   version: '$version'"
-        echo "   url: '$url'"
-        echo "   path: '$path'"
     fi
 done
 
