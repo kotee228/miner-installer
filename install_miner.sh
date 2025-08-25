@@ -7,8 +7,6 @@ DOWNLOAD_URL=$3
 INSTALL_PATH=$4
 
 echo "📦 Устанавливаем $MINER_NAME $MINER_VERSION..."
-echo "📥 URL: $DOWNLOAD_URL"
-echo "📁 Путь: $INSTALL_PATH"
 
 # Создаем папку
 mkdir -p "$INSTALL_PATH"
@@ -35,14 +33,34 @@ if ! tar -xzf "/tmp/${MINER_NAME}.tar.gz" -C "$INSTALL_PATH" --strip-components=
     exit 1
 fi
 
-# Делаем исполняемым (ищем бинарные файлы)
+# Делаем ВСЕ файлы в папке исполняемыми (на всякий случай)
 echo "🔧 Даем права на выполнение..."
-find "$INSTALL_PATH" -type f \( -name "$MINER_NAME" -o -name "$MINER_NAME*" -o -perm -u=x -a ! -name "*.so" \) | head -5 | while read file; do
-    if [ -f "$file" ] && [ ! -d "$file" ]; then
-        chmod +x "$file"
-        echo "   ✅ Исполняемый файл: $(basename "$file")"
-    fi
-done
+find "$INSTALL_PATH" -type f -exec chmod +x {} \; 2>/dev/null || true
+
+# Особые случаи для конкретных майнеров
+case $MINER_NAME in
+    "rigel")
+        # Для rigel ищем конкретный файл
+        if [ -f "$INSTALL_PATH/rigel" ]; then
+            chmod +x "$INSTALL_PATH/rigel"
+            echo "   ✅ Исполняемый файл: rigel"
+        fi
+        ;;
+    "lolminer")
+        # Для lolminer ищем lolMiner
+        if [ -f "$INSTALL_PATH/lolMiner" ]; then
+            chmod +x "$INSTALL_PATH/lolMiner"
+            echo "   ✅ Исполняемый файл: lolMiner"
+        fi
+        ;;
+    "t-rex")
+        # Для t-rex ищем t-rex
+        if [ -f "$INSTALL_PATH/t-rex" ]; then
+            chmod +x "$INSTALL_PATH/t-rex"
+            echo "   ✅ Исполняемый файл: t-rex"
+        fi
+        ;;
+esac
 
 # Очищаем
 rm -f "/tmp/${MINER_NAME}.tar.gz"
