@@ -6,9 +6,9 @@
       "install_path": "/hive/miners/rigel/1.22.2"
     },
     "lolminer": {
-      "version": "1.82",
-      "url": "https://github.com/Lolliedieb/lolMiner-releases/releases/download/1.82/lolMiner_v1.82_Lin64.tar.gz",
-      "install_path": "/hive/miners/lolminer/1.82"
+      "version": "1.97",
+      "url": "https://github.com/Lolliedieb/lolMiner-releases/releases/download/1.97/lolMiner_v1.97_Lin64.tar.gz",
+      "install_path": "/hive/miners/lolminer/1.97"
     },
     "t-rex": {
       "version": "0.28.1",
