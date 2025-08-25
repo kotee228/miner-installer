@@ -4,12 +4,6 @@ set -e
 echo "🎯 Установщик майнеров для HiveOS"
 echo "=========================================="
 
-# Проверяем наличие jq
-if ! command -v jq &> /dev/null; then
-    echo "❌ jq не установлен. Устанавливаем..."
-    apt-get update && apt-get install -y jq
-fi
-
 # Скачиваем конфигурацию
 CONFIG_URL="https://raw.githubusercontent.com/kotee228/miner-installer/main/miners.json"
 MINER_SCRIPT_URL="https://raw.githubusercontent.com/kotee228/miner-installer/main/install_miner.sh"
@@ -20,34 +14,38 @@ curl -s -o /tmp/miners.json "$CONFIG_URL"
 curl -s -o /tmp/install_miner.sh "$MINER_SCRIPT_URL"
 chmod +x /tmp/install_miner.sh
 
-# Читаем конфиг с помощью jq
-DEFAULT_MINERS=$(jq -r '.default_miners[]' /tmp/miners.json 2>/dev/null)
+# Простой парсинг JSON - находим default_miners
+MINERS_CONFIG=$(cat /tmp/miners.json)
+DEFAULT_MINERS=$(echo "$MINERS_CONFIG" | grep '"default_miners"' | sed 's/.*\[//;s/\].*//' | tr -d '" ' | tr ',' '\n')
 
 if [ -z "$DEFAULT_MINERS" ]; then
-    echo "❌ Ошибка парсинга JSON файла"
+    echo "❌ Не удалось найти default_miners"
     exit 1
 fi
 
+echo "🔧 Устанавливаем майнеры: $DEFAULT_MINERS"
+
 # Установка майнеров
-echo "🔧 Устанавливаем майнеры..."
 for miner in $DEFAULT_MINERS; do
     echo "🔄 Обрабатываем майнер: $miner"
     
-    # Получаем данные о майнере с помощью jq
-    version=$(jq -r ".miners.\"$miner\".version" /tmp/miners.json 2>/dev/null)
-    url=$(jq -r ".miners.\"$miner\".url" /tmp/miners.json 2>/dev/null)
-    path=$(jq -r ".miners.\"$miner\".install_path" /tmp/miners.json 2>/dev/null)
+    # Извлекаем данные для каждого майнера
+    miner_block=$(echo "$MINERS_CONFIG" | sed -n "/\"$miner\": {/,/}/p")
     
-    if [ -n "$version" ] && [ -n "$url" ] && [ -n "$path" ] && [ "$version" != "null" ] && [ "$url" != "null" ] && [ "$path" != "null" ]; then
+    version=$(echo "$miner_block" | grep '"version"' | head -1 | cut -d'"' -f4)
+    url=$(echo "$miner_block" | grep '"url"' | head -1 | cut -d'"' -f4)
+    path=$(echo "$miner_block" | grep '"install_path"' | head -1 | cut -d'"' -f4)
+    
+    if [ -n "$version" ] && [ -n "$url" ] && [ -n "$path" ] && [ "$version" != "null" ]; then
         echo "📦 Установка: $miner версии $version"
         echo "📥 URL: $url"
         echo "📁 Путь: $path"
         /tmp/install_miner.sh "$miner" "$version" "$url" "$path"
     else
         echo "⚠️ Ошибка конфига для $miner"
-        echo "   version: $version"
-        echo "   url: $url"
-        echo "   path: $path"
+        echo "   version: '$version'"
+        echo "   url: '$url'"
+        echo "   path: '$path'"
     fi
 done
 
