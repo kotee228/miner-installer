@@ -27,3 +27,20 @@
 ```json
 "default_miners": ["rigel", "nbminer"]
 ```
+
+🚀 Как использовать:
+1. Базовая установка (по умолчанию):
+```bash
+bash -c "$(curl -s https://raw.githubusercontent.com/ваш-аккаунт/miner-installer/main/install.sh)"
+```
+Установит майнеры из default_miners
+
+2. Установка конкретного майнера (если нужно):
+```bash
+# Скачиваем скрипт установки одного майнера
+curl -s -o /tmp/install_miner.sh https://raw.githubusercontent.com/ваш-аккаунт/miner-installer/main/install_miner.sh
+chmod +x /tmp/install_miner.sh
+
+# Устанавливаем конкретный майнер
+/tmp/install_miner.sh "rigel" "1.22.2" "https://github.com/..." "/hive/miners/rigel/1.22.2"
+```
