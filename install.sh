@@ -21,15 +21,20 @@ DEFAULT_MINERS=$(echo "$MINERS_CONFIG" | grep -o '"default_miners":\[[^]]*\]' | 
 # Установка майнеров
 echo "🔧 Устанавливаем майнеры..."
 for miner in $DEFAULT_MINERS; do
+    echo "🔄 Обрабатываем майнер: $miner"
     miner_data=$(echo "$MINERS_CONFIG" | grep -A 4 "\"$miner\"")
     version=$(echo "$miner_data" | grep '"version"' | cut -d'"' -f4)
     url=$(echo "$miner_data" | grep '"url"' | cut -d'"' -f4)
     path=$(echo "$miner_data" | grep '"install_path"' | cut -d'"' -f4)
     
     if [ -n "$version" ] && [ -n "$url" ] && [ -n "$path" ]; then
+        echo "📦 Установка: $miner версии $version"
         /tmp/install_miner.sh "$miner" "$version" "$url" "$path"
     else
         echo "⚠️ Ошибка конфига для $miner"
+        echo "   version: $version"
+        echo "   url: $url"
+        echo "   path: $path"
     fi
 done
 
