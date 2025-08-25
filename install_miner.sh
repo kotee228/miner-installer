@@ -14,20 +14,35 @@ echo "📁 Путь: $INSTALL_PATH"
 mkdir -p "$INSTALL_PATH"
 
 # Скачиваем
-if ! wget -q "$DOWNLOAD_URL" -O "/tmp/${MINER_NAME}.tar.gz"; then
+echo "⬇️ Скачиваем архив..."
+if ! wget -q --timeout=30 --tries=3 "$DOWNLOAD_URL" -O "/tmp/${MINER_NAME}.tar.gz"; then
     echo "❌ Ошибка скачивания $MINER_NAME"
     exit 1
 fi
 
+# Проверяем, что архив скачался
+if [ ! -s "/tmp/${MINER_NAME}.tar.gz" ]; then
+    echo "❌ Пустой архив для $MINER_NAME"
+    rm -f "/tmp/${MINER_NAME}.tar.gz"
+    exit 1
+fi
+
 # Распаковываем
+echo "📂 Распаковываем архив..."
 if ! tar -xzf "/tmp/${MINER_NAME}.tar.gz" -C "$INSTALL_PATH" --strip-components=1; then
     echo "❌ Ошибка распаковки $MINER_NAME"
     rm -f "/tmp/${MINER_NAME}.tar.gz"
     exit 1
 fi
 
-# Делаем исполняемым (ищем бинарный файл)
-find "$INSTALL_PATH" -type f -executable -name "$MINER_NAME" -o -name "$MINER_NAME*" | head -1 | xargs -I {} chmod +x {}
+# Делаем исполняемым (ищем бинарные файлы)
+echo "🔧 Даем права на выполнение..."
+find "$INSTALL_PATH" -type f \( -name "$MINER_NAME" -o -name "$MINER_NAME*" -o -perm -u=x -a ! -name "*.so" \) | head -5 | while read file; do
+    if [ -f "$file" ] && [ ! -d "$file" ]; then
+        chmod +x "$file"
+        echo "   ✅ Исполняемый файл: $(basename "$file")"
+    fi
+done
 
 # Очищаем
 rm -f "/tmp/${MINER_NAME}.tar.gz"
