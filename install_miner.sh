@@ -34,7 +34,6 @@ if ! tar -xzf "/tmp/${MINER_NAME}.tar.gz" -C "$INSTALL_PATH" --strip-components=
 fi
 
 # Делаем ВСЕ файлы в папке исполняемыми (на всякий случай)
-echo "🔧 Даем права на выполнение..."
 find "$INSTALL_PATH" -type f -exec chmod +x {} \; 2>/dev/null || true
 
 # Особые случаи для конкретных майнеров
@@ -43,21 +42,18 @@ case $MINER_NAME in
         # Для rigel ищем конкретный файл
         if [ -f "$INSTALL_PATH/rigel" ]; then
             chmod +x "$INSTALL_PATH/rigel"
-            echo "   ✅ Исполняемый файл: rigel"
         fi
         ;;
     "lolminer")
         # Для lolminer ищем lolMiner
         if [ -f "$INSTALL_PATH/lolMiner" ]; then
             chmod +x "$INSTALL_PATH/lolMiner"
-            echo "   ✅ Исполняемый файл: lolMiner"
         fi
         ;;
     "t-rex")
         # Для t-rex ищем t-rex
         if [ -f "$INSTALL_PATH/t-rex" ]; then
             chmod +x "$INSTALL_PATH/t-rex"
-            echo "   ✅ Исполняемый файл: t-rex"
         fi
         ;;
 esac
@@ -66,5 +62,3 @@ esac
 rm -f "/tmp/${MINER_NAME}.tar.gz"
 
 echo "✅ $MINER_NAME $MINER_VERSION установлен в $INSTALL_PATH"
-echo "📋 Содержимое папки:"
-ls -la "$INSTALL_PATH"
