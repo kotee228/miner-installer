@@ -5,8 +5,8 @@ echo "🎯 Установщик майнеров для HiveOS"
 echo "=========================================="
 
 # Скачиваем конфигурацию
-CONFIG_URL="https://raw.githubusercontent.com/ваш-аккаунт/miner-installer/main/miners.json"
-MINER_SCRIPT_URL="https://raw.githubusercontent.com/ваш-аккаунт/miner-installer/main/install_miner.sh"
+CONFIG_URL="https://raw.githubusercontent.com/kotee228/miner-installer/main/miners.json"
+MINER_SCRIPT_URL="https://raw.githubusercontent.com/kotee228/miner-installer/main/install_miner.sh"
 
 # Скачиваем скрипт установки
 echo "📥 Загружаем конфигурацию..."
